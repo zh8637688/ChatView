@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="8dp">
+
+    <EditText
+        android:id="@+id/input"
+        android:layout_width="0dp"
+        android:layout_height="34dp"
+        android:layout_marginRight="11dp"
+        android:layout_weight="1"
+        android:background="@drawable/input_bg"
+        android:gravity="center_vertical"
+        android:imeOptions="actionSend"
+        android:inputType="textNoSuggestions"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:singleLine="true"
+        android:textSize="13sp" />
+
+    <Button
+        android:id="@+id/send"
+        android:layout_width="60dp"
+        android:layout_height="34dp"
+        android:background="@drawable/send_bg"
+        android:enabled="false"
+        android:text="send"
+        android:textColor="@android:color/white"
+        android:textSize="16dp" />
+
+</merge>

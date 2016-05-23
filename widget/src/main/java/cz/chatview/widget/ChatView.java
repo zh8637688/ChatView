@@ -28,6 +28,7 @@ public class ChatView extends LinearLayout {
     private Context mContext;
 
     private ListView mListView;
+    private View mInputPanel;
 
     private BuilderManager mBuilderManager;
 
@@ -124,6 +125,31 @@ public class ChatView extends LinearLayout {
                                            BuilderManager.ViewBuilder rightBuilder) {
         mBuilderManager.registerMessageViewBuilder(contentClass, leftBuilder, rightBuilder);
         mListView.setAdapter(mAdapter);
+    }
+
+    /**
+     * 设置数据控制面板
+     * @param inputPanel
+     */
+    public void setInputPanel(View inputPanel) {
+        if (inputPanel != null) {
+            if (mInputPanel != null) {
+                this.removeView(mInputPanel);
+            }
+            mInputPanel = inputPanel;
+            ViewGroup.LayoutParams oldParams = inputPanel.getLayoutParams();
+            LayoutParams params;
+            if (oldParams != null) {
+                if (oldParams instanceof LayoutParams) {
+                    params = (LayoutParams) oldParams;
+                } else {
+                    params = new LayoutParams(LayoutParams.MATCH_PARENT, oldParams.height);
+                }
+            } else {
+                params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+            }
+            this.addView(inputPanel, params);
+        }
     }
 
     /**

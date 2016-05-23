@@ -12,6 +12,7 @@ import cz.chatview.holder.TimestampViewHolder;
 import cz.chatview.message.bean.Message;
 import cz.chatview.uitls.ViewHolder;
 import cz.chatview.widget.ChatView;
+import cz.chatview.widget.InputPanel;
 
 
 public class MainActivity extends Activity {
@@ -39,10 +40,14 @@ public class MainActivity extends Activity {
         chatView.registerMessageViewBuilder(TimestampContent.class, new BuilderManager.ViewBuilder() {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent) {
-                return new TimestampViewHolder(getLayoutInflater().inflate(R.layout.message_item_timestamp,parent,false));
+                return new TimestampViewHolder(getLayoutInflater().inflate(R.layout.message_item_timestamp, parent, false));
             }
         });
         chatView.enableAutoScroll(true);
+
+        InputPanel inputPanel = new InputPanel(this);
+        inputPanel.setChatView(chatView);
+        chatView.setInputPanel(inputPanel);
 
         chatView.add(new Message(0, "A", "", 0, new TextContent("i am left"), false));
         chatView.add(new Message(0,"","",0,new TimestampContent(System.currentTimeMillis()),false));
