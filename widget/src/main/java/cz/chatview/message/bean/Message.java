@@ -17,13 +17,13 @@ public class Message {
 
     private State mState;
 
-    public Message(long id, String from, String avatar, long timeStamp, Content content, boolean fromme) {
+    public Message(long id, String from, String avatar, long timeStamp, Content content, boolean fromMe) {
         mId = id;
         mFrom = from;
         mAvatar = avatar;
         mTimeStamp = timeStamp;
         mContent = content;
-        mFromMe = fromme;
+        mFromMe = fromMe;
     }
 
     public long getId() {

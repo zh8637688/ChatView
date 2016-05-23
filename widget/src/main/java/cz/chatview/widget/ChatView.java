@@ -108,18 +108,37 @@ public class ChatView extends LinearLayout {
         }
     }
 
+    /**
+     * 注册一个对应content类型的builder
+     * @param contentClass
+     * @param builder
+     */
     public void registerMessageViewBuilder(Class<? extends Content> contentClass,
                                            BuilderManager.ViewBuilder builder) {
         mBuilderManager.registerMessageViewBuilder(contentClass, builder);
         mListView.setAdapter(mAdapter);
     }
 
+    public void registerMessageViewBuilder(Class<? extends Content> contentClass,
+                                           BuilderManager.ViewBuilder leftBuilder,
+                                           BuilderManager.ViewBuilder rightBuilder) {
+        mBuilderManager.registerMessageViewBuilder(contentClass, leftBuilder, rightBuilder);
+        mListView.setAdapter(mAdapter);
+    }
+
+    /**
+     * 是否已经滑动到聊天窗的底部
+     * @return
+     */
     public boolean hasReachedBottom() {
         int lastVisible = mListView.getLastVisiblePosition();
         Adapter adapter = mListView.getAdapter();
         return adapter == null ? true : lastVisible == adapter.getCount() - 1;
     }
 
+    /**
+     * 滑动到底部
+     */
     public void scrollToBottom() {
         Adapter adapter = mListView.getAdapter();
         if (adapter != null) {
@@ -127,6 +146,10 @@ public class ChatView extends LinearLayout {
         }
     }
 
+    /**
+     * 开启自动滑动
+     * @param enable true，当新消息加入时滑动到最底部
+     */
     public void enableAutoScroll(boolean enable) {
         mAutoScroll = enable;
         mForceToBottom &= mAutoScroll;
@@ -150,7 +173,7 @@ public class ChatView extends LinearLayout {
             if (msg != null) {
                 Content content = msg.getContent();
                 if (content != null) {
-                    return mBuilderManager.getItemViewType(content.getClass());
+                    return mBuilderManager.getItemViewType(content.getClass(), msg.fromMe());
                 }
             }
             return 0;
@@ -179,7 +202,7 @@ public class ChatView extends LinearLayout {
             if (message != null) {
                 Content content = message.getContent();
                 if (content != null) {
-                    builder = mBuilderManager.getBuilder(content.getClass());
+                    builder = mBuilderManager.getBuilder(content.getClass(), message.fromMe());
                 } else {
                     builder = mBuilderManager.getBuilder(Content.class);
                 }
@@ -194,7 +217,7 @@ public class ChatView extends LinearLayout {
             } else {
                 holder = (ViewHolder) convertView.getTag();
             }
-            builder.onBindViewHolder(holder, message);
+            holder.onBindViewHolder(message);
 
             return convertView;
         }
