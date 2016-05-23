@@ -1,4 +1,4 @@
-package cz.chatview.builder;
+package cz.chatview.uitls;
 
 import android.view.View;
 

@@ -6,18 +6,19 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.Map;
 
-import cz.chatview.bean.Message;
-import cz.chatview.bean.Content;
-import cz.chatview.builder.ViewHolder.EmptyViewHolder;
+import cz.chatview.message.bean.Message;
+import cz.chatview.message.bean.Content;
+import cz.chatview.uitls.ViewHolder;
+import cz.chatview.uitls.ViewHolder.EmptyViewHolder;
 
 /**
  * Created by haozhou on 2016/5/20.
  */
-public class ViewBuilderManager {
+public class BuilderManager {
     private final Map<Class, ViewBuilder> mBuilders = new HashMap<>();
     private final Map<Class, Integer> mTypesForView = new HashMap<>();
 
-    public ViewBuilderManager() {
+    public BuilderManager() {
         // 用于处理空数据的默认builder
         ViewBuilder<EmptyViewHolder> emptyViewBuilder = new ViewBuilder<EmptyViewHolder>() {
             @Override

@@ -1,5 +1,7 @@
 package cz.chatview.bean;
 
+import cz.chatview.message.bean.Content;
+
 /**
  * Created by Administrator on 2016/5/21.
  */

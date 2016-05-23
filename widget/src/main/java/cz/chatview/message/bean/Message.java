@@ -1,26 +1,26 @@
-package cz.chatview.bean;
+package cz.chatview.message.bean;
 
 /**
  * Created by haozhou on 2016/5/20.
  */
-public class ChatMessage {
+public class Message {
     public enum State {
         SENDING, SUCCESS, FAIL
     }
 
     private final long mId;
     private final String mFrom;
-    private final String mTo;
+    private final String mAvatar;
     private final long mTimeStamp;
     private final Content mContent;
     private final boolean mFromMe;
 
     private State mState;
 
-    public ChatMessage(long id, String from, String to, long timeStamp, Content content, boolean fromme) {
+    public Message(long id, String from, String avatar, long timeStamp, Content content, boolean fromme) {
         mId = id;
         mFrom = from;
-        mTo = to;
+        mAvatar = avatar;
         mTimeStamp = timeStamp;
         mContent = content;
         mFromMe = fromme;
@@ -34,8 +34,8 @@ public class ChatMessage {
         return mFrom;
     }
 
-    public String getTo() {
-        return mTo;
+    public String getAvatar() {
+        return mAvatar;
     }
 
     public long getTimeStamp() {
@@ -62,13 +62,12 @@ public class ChatMessage {
     public boolean equals(Object o) {
         if (o == this)
             return true;
-        if (o == null || !(o instanceof ChatMessage))
+        if (o == null || !(o instanceof Message))
             return false;
 
-        ChatMessage other = (ChatMessage) o;
+        Message other = (Message) o;
         if (mId != other.mId
                 || mFrom != null ? !mFrom.equals(other.mFrom) : other.mFrom != null
-                || mTo != null ? !mTo.equals(other.mTo) : other.mTo != null
                 || mTimeStamp != other.mTimeStamp
                 || !mContent.equals(mContent))
             return false;

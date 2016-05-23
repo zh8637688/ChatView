@@ -11,43 +11,49 @@ import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cz.chatview.bean.Message;
-import cz.chatview.bean.Content;
-import cz.chatview.builder.ViewBuilderManager;
-import cz.chatview.builder.ViewHolder;
+import cz.chatview.builder.BuilderManager;
+import cz.chatview.message.bean.Content;
+import cz.chatview.message.bean.Message;
+import cz.chatview.uitls.FIFOList;
+import cz.chatview.uitls.ViewHolder;
 
 /**
  * Created by haozhou on 2016/5/20.
  */
 public class ChatView extends LinearLayout {
+    private final static int DEFAULT_MAX_COUNT = 200;
+
     private Context mContext;
 
     private ListView mListView;
 
-    private ViewBuilderManager mBuilderManager;
+    private BuilderManager mBuilderManager;
 
     private ChatListAdapter mAdapter;
 
-    private List<Message> mMessages = new ArrayList<>();
+    private FIFOList<Message> mMessages = new FIFOList<>();
 
-    public ChatView (Context context) {
-        this (context, null);
+    private boolean mAutoScroll = true;
+    private boolean mForceToBottom = true;
+
+    public ChatView(Context context) {
+        this(context, null);
     }
 
-    public ChatView (Context context, AttributeSet attr) {
+    public ChatView(Context context, AttributeSet attr) {
         super(context, attr);
         mContext = context;
 
-        mBuilderManager = new ViewBuilderManager();
+        mBuilderManager = new BuilderManager();
+        mMessages.setLimit(DEFAULT_MAX_COUNT);
 
         this.setOrientation(VERTICAL);
         initChatListView();
     }
 
-    private void initChatListView () {
+    private void initChatListView() {
         mListView = new ListView(mContext);
         mListView.setFastScrollEnabled(false);
         mListView.setVerticalScrollBarEnabled(false);
@@ -57,7 +63,20 @@ public class ChatView extends LinearLayout {
         mListView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-
+                if (scrollState == SCROLL_STATE_IDLE) {
+                    if (hasReachedBottom()) {
+                        mForceToBottom = mAutoScroll;
+                        mMessages.setLimit(DEFAULT_MAX_COUNT);
+                    } else {
+                        mForceToBottom = false;
+                        // 如果没有停留在底部，则不设限，防止之前的消息被冲掉
+                        mMessages.setLimit(0);
+                    }
+                    // 防止达到最大容量后没有scroll动画
+                    if (mMessages.removeIfThreeQuarters()) {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                }
             }
 
             @Override
@@ -76,10 +95,21 @@ public class ChatView extends LinearLayout {
     public void add(Message message) {
         mMessages.add(message);
         mAdapter.notifyDataSetChanged();
+        if (mForceToBottom) {
+            scrollToBottom();
+        }
+    }
+
+    public void add(List<Message> messages) {
+        mMessages.add(messages);
+        mAdapter.notifyDataSetChanged();
+        if (mForceToBottom) {
+            scrollToBottom();
+        }
     }
 
     public void registerMessageViewBuilder(Class<? extends Content> contentClass,
-                                           ViewBuilderManager.ViewBuilder builder) {
+                                           BuilderManager.ViewBuilder builder) {
         mBuilderManager.registerMessageViewBuilder(contentClass, builder);
         mListView.setAdapter(mAdapter);
     }
@@ -90,11 +120,20 @@ public class ChatView extends LinearLayout {
         return adapter == null ? true : lastVisible == adapter.getCount() - 1;
     }
 
-    public void moveToBottem() {
+    public void scrollToBottom() {
         Adapter adapter = mListView.getAdapter();
         if (adapter != null) {
             mListView.smoothScrollToPosition(adapter.getCount() - 1);
         }
+    }
+
+    public void enableAutoScroll(boolean enable) {
+        mAutoScroll = enable;
+        mForceToBottom &= mAutoScroll;
+    }
+
+    public ListView getChatListView() {
+        return mListView;
     }
 
     class ChatListAdapter extends BaseAdapter {
@@ -108,7 +147,7 @@ public class ChatView extends LinearLayout {
         @Override
         public int getItemViewType(int position) {
             Message msg = getItem(position);
-            if(msg != null) {
+            if (msg != null) {
                 Content content = msg.getContent();
                 if (content != null) {
                     return mBuilderManager.getItemViewType(content.getClass());
@@ -136,7 +175,7 @@ public class ChatView extends LinearLayout {
         public View getView(int position, View convertView, ViewGroup parent) {
             Message message = getItem(position);
 
-            ViewBuilderManager.ViewBuilder builder;
+            BuilderManager.ViewBuilder builder;
             if (message != null) {
                 Content content = message.getContent();
                 if (content != null) {

@@ -1,4 +1,4 @@
-package cz.chatview.bean;
+package cz.chatview.message.bean;
 
 /**
  * Message中的消息实体

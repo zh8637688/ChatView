@@ -5,7 +5,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import cz.chatview.R;
-import cz.chatview.builder.ViewHolder;
+import cz.chatview.uitls.ViewHolder;
 
 /**
  * Created by Administrator on 2016/5/21.
