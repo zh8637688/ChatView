@@ -66,17 +66,19 @@ public class ChatView extends LinearLayout {
             public void onScrollStateChanged(AbsListView view, int scrollState) {
                 if (scrollState == SCROLL_STATE_IDLE) {
                     if (hasReachedBottom()) {
+                        // 位于最下方的时候开启滚动刷屏
                         mForceToBottom = mAutoScroll;
                         mMessages.setLimit(DEFAULT_MAX_COUNT);
-                    } else {
-                        mForceToBottom = false;
-                        // 如果没有停留在底部，则不设限，防止之前的消息被冲掉
-                        mMessages.setLimit(0);
                     }
                     // 防止达到最大容量后没有scroll动画
                     if (mMessages.removeIfThreeQuarters()) {
                         mAdapter.notifyDataSetChanged();
                     }
+                } else if (scrollState == SCROLL_STATE_TOUCH_SCROLL) {
+                    // 手动滑动时停止滚动刷屏
+                    mForceToBottom = false;
+                    // 如果没有停留在底部，则不设限，防止之前的消息被冲掉
+                    mMessages.setLimit(0);
                 }
             }
 
@@ -111,6 +113,7 @@ public class ChatView extends LinearLayout {
 
     /**
      * 注册一个对应content类型的builder
+     *
      * @param contentClass
      * @param builder
      */
@@ -129,6 +132,7 @@ public class ChatView extends LinearLayout {
 
     /**
      * 设置数据控制面板
+     *
      * @param inputPanel
      */
     public void setInputPanel(View inputPanel) {
@@ -154,6 +158,7 @@ public class ChatView extends LinearLayout {
 
     /**
      * 是否已经滑动到聊天窗的底部
+     *
      * @return
      */
     public boolean hasReachedBottom() {
@@ -174,6 +179,7 @@ public class ChatView extends LinearLayout {
 
     /**
      * 开启自动滑动
+     *
      * @param enable true，当新消息加入时滑动到最底部
      */
     public void enableAutoScroll(boolean enable) {
