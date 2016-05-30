@@ -19,10 +19,11 @@ public class BuilderManager {
     private final Map<Class, Integer> mTypesForBuilder = new HashMap<>();
 
     private int viewTypeCount = 0;
+    private ViewBuilder emptyViewBuilder;
 
     public BuilderManager() {
         // 用于处理空数据的默认builder
-        ViewBuilder emptyViewBuilder = new ViewBuilder() {
+        emptyViewBuilder = new ViewBuilder() {
             @Override
             public ViewHolder onCreateViewHolder(ViewGroup parent) {
                 return new EmptyViewHolder(new View(parent.getContext()));
@@ -88,7 +89,7 @@ public class BuilderManager {
                 }
             }
         }
-        return null;
+        return emptyViewBuilder;
     }
 
     /**

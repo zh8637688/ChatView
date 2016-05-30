@@ -74,4 +74,13 @@ public class Message {
 
         return true;
     }
+
+    @Override
+    public int hashCode() {
+        int result = (int)(mId ^ (mId >>> 32));
+        result = 31 * result + (mFrom != null ? mFrom.hashCode() : 0);
+        result = 31 * result + (int)(mTimeStamp ^ (mTimeStamp >>> 32));
+        result = 31 * result + (mContent != null ? mContent.hashCode() : 0);
+        return result;
+    }
 }
