@@ -1,5 +1,5 @@
 # ChatView
-可以方便的设计聊天列表样式。
+屏蔽了Adapter实现细节，Data类型绑定对应View，可以方便的设计聊天列表样式。
 ```
 public void registerMessageViewBuilder(Class<? extends Content> contentClass,
                                            BuilderManager.ViewBuilder builder)
